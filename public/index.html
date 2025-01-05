@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultados</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="results" class="results-container"></div>
+
+  <script>
+    fetch('http://localhost:3000/results')
+      .then(response => response.json())
+      .then(data => {
+        const resultsDiv = document.getElementById('results');
+        
+        data.forEach(item => {
+          let content = `
+            <div class="result-card">
+              <div class="result-header">
+                <span class="result-time">${item.Hora}</span>
+                <span class="result-title">${item.Titulo}</span>
+              </div>
+              <div class="result-details">
+                <div class="result-prize"><strong>Prêmio</strong></div>
+                <div class="result-result"><strong>Resultado</strong></div>
+                <div class="result-group"><strong>Grupo</strong></div>
+              </div>
+              <div class="result-values">
+                ${item.Resultados.map((resultado, index) => ` 
+                  <div class="result-value">
+                    <span class="result-index">${index + 1}º</span>           
+                    <span class="result-result-value">${resultado.Resultado}</span>
+                    <span class="result-group-value">${resultado.Grupo}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          resultsDiv.innerHTML += content;
+        });
+      })
+      .catch(error => {
+        console.error('Erro ao carregar os resultados:', error);
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = `<p>Ocorreu um erro ao carregar os resultados.</p>`;
+      });
+  </script>
+</body>
+</html>
